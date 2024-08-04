@@ -1,16 +1,19 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from 'path';
-import { fileURLToPath } from "url";
+import url from 'url';
+import axios from "axios";
+import * as cheerio from 'cheerio';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+//const __filename = fileURLToPath(import.meta.url);
+//const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(new URL (import.meta.url).pathname);
 
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 500,
         height: 550,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.resolve(__dirname, 'preload.js'),
             contextIsolation: true,
             enableRemoteModule: false,
             nodeIntegration: false,            
@@ -20,22 +23,32 @@ const createWindow = () => {
     win.loadFile('index.html');
 };
 
-app.whenReady().then(() => {
-    createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
+ipcMain.handle('fetch-champions', async () => {
+    try {
+        const { data } = await axios.get('https://universe.leagueoflegends.com/en_US/champions/');
+        const $ = cheerio.load(data);
+        const champions = [];
+        $('div.copy_xxN7 h1').each((i, el) => {
+            champions.push($(el).text().trim());
+        });
+        console.log(`${champions}`);
+        return champions;
+    } catch (error) {
+        console.error('Error fetching champions:', error);
+        throw error;
+    }
 });
 
+app.whenReady().then(createWindow);
+
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+    if (process.platform != 'darwin') {
         app.quit();
     }
 });
 
-ipcMain.handle('fetch-data', async () => {
-    return ['Allice', 'Bob', 'James'];
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
 });
