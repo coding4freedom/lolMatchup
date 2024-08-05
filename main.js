@@ -8,6 +8,9 @@ import * as cheerio from 'cheerio';
 //const __dirname = path.dirname(__filename);
 const __dirname = path.dirname(new URL (import.meta.url).pathname);
 
+console.log('Current directory:', __dirname);
+console.log('Preload script path:', path.resolve(__dirname, 'preload.js'));
+
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 500,
@@ -24,6 +27,8 @@ const createWindow = () => {
 };
 
 ipcMain.handle('fetch-champions', async () => {
+    console.log('IPC Handler: fetch-champions invoked');
+
     try {
         const { data } = await axios.get('https://universe.leagueoflegends.com/en_US/champions/');
         const $ = cheerio.load(data);
@@ -31,7 +36,7 @@ ipcMain.handle('fetch-champions', async () => {
         $('div.copy_xxN7 h1').each((i, el) => {
             champions.push($(el).text().trim());
         });
-        console.log(`${champions}`);
+        console.log('Fetched Champions:', champions);
         return champions;
     } catch (error) {
         console.error('Error fetching champions:', error);
