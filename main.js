@@ -1,3 +1,4 @@
+/* main.js */
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from 'path';
 import url from 'url';
@@ -7,6 +8,7 @@ import * as cheerio from 'cheerio';
 //const __filename = fileURLToPath(import.meta.url);
 //const __dirname = path.dirname(__filename);
 const __dirname = path.dirname(new URL (import.meta.url).pathname);
+
 
 console.log('Current directory:', __dirname);
 console.log('Preload script path:', path.resolve(__dirname, 'preload.js'));
@@ -57,3 +59,5 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+

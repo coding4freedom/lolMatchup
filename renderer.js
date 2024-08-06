@@ -1,5 +1,4 @@
-import axios from 'axios';
-import cheerio from 'cheerio';
+/* renderer.js */
 
 /*
 document.getElementById('champion-btn').addEventListener('click', () => {
