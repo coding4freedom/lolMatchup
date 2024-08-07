@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from "electron";
 
 console.log('Preload script loaded.');
 
+/*
 contextBridge.exposeInMainWorld('api', {
     fetchChampions: async() => {
         console.log('Preload API: fetchChampions invoked');
@@ -14,5 +15,28 @@ contextBridge.exposeInMainWorld('api', {
             console.error('Preload API error', error);
             throw error;
         }        
+    },
+    ping: async () => {
+        console.log('Preload API: ping invoked');
+        try {
+            return await ipcRenderer.invoke('ping');
+        } catch (error) {
+            console.error('Preload API error', error);
+            throw error;
+        }
+    }
+});
+
+*/
+
+contextBridge.exposeInMainWorld('api', {
+    ping: async () => {
+        console.log('Preload API: ping invoked');
+        try {
+            return await ipcRenderer.invoke('ping');
+        } catch (error) {
+            console.error('Preload API error', error);
+            throw error;
+        }
     }
 });

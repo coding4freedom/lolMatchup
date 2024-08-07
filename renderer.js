@@ -12,12 +12,19 @@ document.getElementById('champion-btn').addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Renderer script loaded.');
-
+/*
     window.api.fetchChampions()
         .then(champions => {
             console.log('Champions received:', champions);
         })
         .catch(error => {
             console.error('Error fetching champions:', error)
-        });
+        });*/
+        window.api.ping()
+        .then(response => {
+            console.log('Ping response:', response);
+        })
+        .catch(error => {
+            console.error('Ping error:', error);
+        });    
 });

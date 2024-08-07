@@ -1,19 +1,21 @@
 /* main.js */
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from 'path';
-import url from 'url';
+import { fileURLToPath } from 'url';
 import axios from "axios";
 import * as cheerio from 'cheerio';
 
 //const __filename = fileURLToPath(import.meta.url);
 //const __dirname = path.dirname(__filename);
-const __dirname = path.dirname(new URL (import.meta.url).pathname);
+//const __dirname = path.dirname(new URL (import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 console.log('Current directory:', __dirname);
 console.log('Preload script path:', path.resolve(__dirname, 'preload.js'));
 
-const createWindow = () => {
+
+const createWindow = async () => {
     const win = new BrowserWindow({
         width: 500,
         height: 550,
@@ -26,8 +28,8 @@ const createWindow = () => {
     });
 
     win.loadFile('index.html');
-};
-
+}; 
+/*
 ipcMain.handle('fetch-champions', async () => {
     console.log('IPC Handler: fetch-champions invoked');
 
@@ -44,9 +46,16 @@ ipcMain.handle('fetch-champions', async () => {
         console.error('Error fetching champions:', error);
         throw error;
     }
+}); */
+
+ipcMain.handle('ping', async () => {
+    console.log('Ping received');
+    return 'Pong';
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+    await createWindow();
+});
 
 app.on('window-all-closed', () => {
     if (process.platform != 'darwin') {
