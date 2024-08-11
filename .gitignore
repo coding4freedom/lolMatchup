@@ -15,3 +15,6 @@ build/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Old Local files
+old/ 

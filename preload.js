@@ -1,13 +1,10 @@
-/* preload.js */
-console.log('Preload script loaded.');
+const { contextBridge, ipcRenderer } = require('electron/renderer')
 
-import { contextBridge, ipcRenderer } from "electron";
+console.log('Preload script loaded.')
 
-console.log('Preload script loaded.');
 
-/*
 contextBridge.exposeInMainWorld('api', {
-    fetchChampions: async() => {
+    fetchChampions: async () => {
         console.log('Preload API: fetchChampions invoked');
         try {
             return await ipcRenderer.invoke('fetch-champions');
@@ -15,28 +12,5 @@ contextBridge.exposeInMainWorld('api', {
             console.error('Preload API error', error);
             throw error;
         }        
-    },
-    ping: async () => {
-        console.log('Preload API: ping invoked');
-        try {
-            return await ipcRenderer.invoke('ping');
-        } catch (error) {
-            console.error('Preload API error', error);
-            throw error;
-        }
-    }
-});
-
-*/
-
-contextBridge.exposeInMainWorld('api', {
-    ping: async () => {
-        console.log('Preload API: ping invoked');
-        try {
-            return await ipcRenderer.invoke('ping');
-        } catch (error) {
-            console.error('Preload API error', error);
-            throw error;
-        }
-    }
+    }    
 });
