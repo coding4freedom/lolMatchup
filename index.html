@@ -14,13 +14,14 @@
     <main id="content-container">
       <section id="input-section">
         <h1>Select Champion</h1>
-        <input id="champ-input" type="text" placeholder="Enter Champion">
+        <input id="champ-input" type="text" placeholder="Enter Champion" list="champ__suggestion-list">
+        <datalist id="champ__suggestion-list"></datalist>
         <button id="champion-btn">Find Matchup</button>      
       </section>
       <section class="champ-container">
         <section class="champ-counters"></section>
         <section class="champ-worst-picks"></section>
-      </section>      
+      </section>          
     </main>
     <script src="./renderer.js"></script>
   </body>

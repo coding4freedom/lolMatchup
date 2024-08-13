@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
-//const axios = require('axios')
 const cheerio = require('cheerio')
+const fetch = require('node-fetch')
 const puppeteer = require('puppeteer')
 const path = require('node:path')
 
@@ -21,6 +21,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     //ipcMain.handle('ping', () => 'pong')
+    
     ipcMain.handle('fetch-champions', async () => {
         console.log('IPC Handler: fetch-champions invoked');
 
@@ -54,6 +55,29 @@ app.whenReady().then(() => {
             throw error;
         }
     });
+
+    // handle IPC to fetch counters
+    ipcMain.handle('fetch-counters', async (event, champ) => {
+      const baseUrl = `https://u.gg/lol/champions/${encodeURIComponent(champ)}/counter`;
+
+      try {
+        const response = await fetch(baseUrl);
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
+        const counters = [];
+        $('div.counters.list.best-win-rate div.champion-name').each((index, element) => {
+          counters.push($(element).text().trim());
+        });
+
+        return counters;
+
+      } catch (error) {
+        console.error('Error fetching or parsing data:', error);
+        return [];
+      }
+    })
+
   createWindow()
 
   app.on('activate', () => {

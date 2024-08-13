@@ -12,5 +12,13 @@ contextBridge.exposeInMainWorld('api', {
             console.error('Preload API error', error);
             throw error;
         }        
-    }    
+    },
+    fetchCounters: async (counter) => {
+        try {
+            return await ipcRenderer.invoke('fetch-counters', counter);
+        } catch (error) {
+            console.error('Preload Api error:', error)
+            throw error;
+        }
+    },    
 });
