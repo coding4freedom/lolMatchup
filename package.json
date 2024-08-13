@@ -1,8 +1,7 @@
 {
   "name": "lolMatchup",
   "version": "1.0.0",
-  "description": "",
-  "type": "module",
+  "description": "",  
   "main": "main.js",
   "scripts": {
     "start": "electron ."

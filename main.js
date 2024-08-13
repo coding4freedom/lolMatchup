@@ -3,7 +3,6 @@ const cheerio = require('cheerio')
 const puppeteer = require('puppeteer')
 const path = require('node:path')
 
-import fetch from 'node-fetch'
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -49,7 +48,7 @@ app.whenReady().then(() => {
                 champions.push($(el).text().trim());
             });
 
-            console.log('Fetched Champions:', champions);
+            //console.log('Fetched Champions:', champions);
             return champions;
         } catch (error) {
             console.error('Error fetching champions:', error);
@@ -58,19 +57,27 @@ app.whenReady().then(() => {
     });
 
     // handle IPC to fetch counters
-    ipcMain.handle('fetch-counters', async (event, champ) => {
-      const baseUrl = `https://u.gg/lol/champions/${encodeURIComponent(champ)}/counter`;
+    ipcMain.handle('fetch-counters', async (event, url) => {
+      console.log('IPC Handler: fetch-counters invoked with URL:', url);
 
       try {
-        const response = await fetch(baseUrl);
-        const html = await response.text();
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        await page.goto(url, { waitUntil: 'networkidle2'})
+
+        const html = await page.content();
+
+        await browser.close();
+
         const $ = cheerio.load(html);
 
         const counters = [];
-        $('div.counters.list.best-win-rate div.champion-name').each((index, element) => {
+        $('div.counters-list.best-win-rate div.champion-name').each((index, element) => {
           counters.push($(element).text().trim());
         });
 
+        console.log(counters)
         return counters;
 
       } catch (error) {

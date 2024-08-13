@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const championsArray = await window.api.fetchChampions();
     const input = document.getElementById('champ-input');
     const datalist = document.getElementById('champ__suggestion-list');
-    const countersContainer = document.getElementsByClassName('champ-counters');
+    const countersContainer = document.getElementById('champ-counters');
+    const button = document.getElementById('champion-btn');
     
     // Function to update datalist with champions
     function updateDataList(champs) {
@@ -16,8 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Function to handle user input
-    function handleUserInput(champ) {
-        const counters = await window.api.fetchCounters(champ);
+    async function handleUserInput(champ) {
+        // Sanitize the champion name
+        const sanitizedChamp = champ.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        const baseUrl = `https://u.gg/lol/champions/${sanitizedChamp}/counter`;
+
+        const counters = await window.api.fetchCounters(baseUrl);
         countersContainer.innerHTML = '';
         counters.forEach(counter => {
             const div = document.createElement('div');
@@ -34,12 +40,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Handle input selection
-    input.addEventListener('change', () => {
+    input.addEventListener('change', async () => {
         const selectedChamp = input.value;
         if (championsArray.includes(selectedChamp)) {
             handleUserInput(selectedChamp)
         }
     });
+
+    // Event listener for button click to display counters
+    button.addEventListener('click', async () => {
+        const selectChamp = input.value;
+        if (championsArray.includes(selectChamp)) {
+            await handleUserInput(selectChamp);
+        } else {
+            countersContainer.innerHTML = 'Please select a valid champion name!'
+        }
+    })
 });
 
 /*

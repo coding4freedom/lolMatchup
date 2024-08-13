@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('api', {
     },
     fetchCounters: async (counter) => {
         try {
+            console.log('Preload Api: fetch counter')
             return await ipcRenderer.invoke('fetch-counters', counter);
         } catch (error) {
             console.error('Preload Api error:', error)
