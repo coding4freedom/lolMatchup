@@ -2,6 +2,7 @@
   "name": "lolMatchup",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -12,7 +13,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "electron": "^31.3.0",
-    "node-fetch": "^3.3.2",
     "puppeteer": "^23.0.2"
   }
 }

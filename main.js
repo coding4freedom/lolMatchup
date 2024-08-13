@@ -1,8 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const cheerio = require('cheerio')
-const fetch = require('node-fetch')
 const puppeteer = require('puppeteer')
 const path = require('node:path')
+
+import fetch from 'node-fetch'
 
 const createWindow = () => {
   const win = new BrowserWindow({
